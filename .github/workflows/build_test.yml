@@ -4,8 +4,7 @@ name: Build_test_app
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  
 
 jobs:
   build_and_test:
@@ -19,10 +18,23 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 24
+        cache: 'npm'
     - name: Install dependencies
       run: npm install
     - name: start application
       run: npm start
     - name: start tests
       run: npm test
+
+  deploy:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to Render
+      uses: JorgeLNJunior/render-deploy@v1.4.7
+      with:
+        service_id: ${{ secrets.SERVICE_ID }}
+        api_key: ${{ secrets.RENDER_TOKEN }}
+        wait_deploy: true
       
