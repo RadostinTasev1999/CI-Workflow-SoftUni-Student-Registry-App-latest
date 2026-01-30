@@ -21,10 +21,10 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
-    - name: start application
-      run: npm start
+    
     - name: start tests
-      run: npm test
+      run: |
+       npm start & npx wait-on http://localhost:8080 npm test
 
   deploy:
     needs: build_and_test
